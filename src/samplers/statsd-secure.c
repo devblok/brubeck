@@ -98,7 +98,7 @@ static void *statsd_secure__thread(void *_in)
 
 	char buffer[MAX_PACKET_SIZE];
 
-	HMAC_CTX ctx;
+	HMAC_CTX *ctx;
 	unsigned char hmac_buffer[SHA_SIZE];
 	unsigned int hmac_len;
 
@@ -108,7 +108,7 @@ static void *statsd_secure__thread(void *_in)
 
 	log_splunk("sampler=statsd-secure event=worker_online");
 
-	HMAC_CTX_init(&ctx);
+	ctx = EVP_CIPHER_CTX_new();
 	HMAC_Init_ex(&ctx, statsd->hmac_key, strlen(statsd->hmac_key), SHA_FUNCTION(), NULL);
 
 	for (;;) {
